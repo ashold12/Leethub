@@ -3,10 +3,19 @@
  * @return {number}
  */
 var findDuplicate = function(nums) {
-    let dic = {}
-    for (num of nums) {
-        if (num in dic) return num
-        dic[num] = 1
+    let first = nums[0]
+    let second = nums[nums[0]]
+    
+    while (first != second) {
+        first = nums[first]
+        second = nums[nums[second]]
     }
-    return null
+    
+    second = 0 
+    
+    while (first != second) {
+        first = nums[first]
+        second = nums[second]
+    }
+    return second
 };
