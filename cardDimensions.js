@@ -1,7 +1,11 @@
+
 let exampleD = {
   '145x24': 2,
   '30x30': 1,
   '50x10': 3,
+}
+let exampleC = {
+ '10x10':6
 }
 /*
 let sheet size = ?any dimension?
@@ -76,7 +80,9 @@ return possibleScraps
 
 let main = (cardDimensions, sheetSize) => {
 let minSheets;
+debugger;
 let inner = (cardDimensions, sheets = 0, scraps = []) => {
+  debugger;
   if (Object.keys(cardDimensions).length === 0) {
     if (minSheets === undefined || minSheets > sheets) {
       minSheets = sheets
@@ -89,10 +95,11 @@ let inner = (cardDimensions, sheets = 0, scraps = []) => {
       cardDimensions[dimension]--
     }
     else delete cardDimensions[dimension]
+    let possible = false
     for (let z = 0; z < scraps.length; z++) {
       let scrap = scraps[z]
       //remove scrap from working set after including remainders
-      let possible = generateScraps(dimension, scrap)
+      possible = generateScraps(dimension, scrap)
       if (possible) {
         debugger
         let shallow = [...scraps]
@@ -102,11 +109,13 @@ let inner = (cardDimensions, sheets = 0, scraps = []) => {
         })
       }
     }
-    let newSheetSolutions = generateScraps(dimension, sheetSize)
-    debugger;
-    newSheetSolutions.forEach((solution) => {
-      inner(cardDimensions, sheets + 1, [...scraps, ...solution])
-    })
+    if (!possible) {
+      let newSheetSolutions = generateScraps(dimension, sheetSize)
+      debugger;
+      newSheetSolutions.forEach((solution) => {
+        inner(cardDimensions, sheets + 1, [...scraps, ...solution])
+      })
+    }
     //backtrack
     if (cardDimensions[dimension]) {
       cardDimensions[dimension]++
