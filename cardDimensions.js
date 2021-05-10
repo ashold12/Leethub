@@ -31,12 +31,38 @@ let generateScraps = (cardDimensions, sourceDimensions) => {
 
   let [xSource, ySource] = [...sourceDimensions]
   let [xCard, yCard] = [...cardDimensions]
+  //check if solutions are possible return null otherwise
+  if ((+xCard > +xSource && +xCard > +ySource) || (+yCard > +ySource && +yCard > +xSource)) {
+    return null
+  }
 
   possibleScraps.push([[+xSource, ySource - yCard], [xSource - xCard, +yCard]])
-  possibleScraps.push([[xSource - xCard, +ySource], [+xCard, ySource - yCard]])
-  // flip card for next cuts
-  possibleScraps.push([[+xSource, ySource - xCard], [xSource - yCard, +xCard]])
-  possibleScraps.push([[xSource - yCard, +ySource], [+yCard, ySource - xCard]])
+  if (xSource !== ySource) {
+    possibleScraps.push([[+xCard, ySource - yCard], [xSource - xCard, +ySource]])
+  }
+  //flip card for next cuts
+  if (xCard !== yCard) {
+    possibleScraps.push([[+xSource, ySource - xCard], [xSource - yCard, +xCard]])
+    if (xSource !== ySource) {
+      possibleScraps.push([[xSource - yCard, +ySource], [+yCard, ySource - xCard]])
+    }
+  }
+
+
+  for (let scrapsIndex = 0; scrapsIndex < possibleScraps.length; scrapsIndex++) {
+    let scraps = possibleScraps[scrapsIndex];
+    for (let entryIndex = 0; entryIndex < scraps.length; entryIndex++) {
+      let entry = scraps[entryIndex]
+      if (entry[0] === 0 || entry[1] === 0) {
+        scraps.splice(entryIndex, 1)
+        entryIndex --
+      }
+      if (entry[0] < 0 || entry[1] < 0) {
+        possibleScraps.splice(scrapsIndex, 1)
+        scrapsIndex--
+      }
+    }
+  }
 
   return possibleScraps
 }
